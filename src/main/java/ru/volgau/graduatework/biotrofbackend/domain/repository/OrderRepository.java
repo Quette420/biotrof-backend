@@ -36,7 +36,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.id = :id")
     void updateShipmentData(@Param("id") Long id, @Param("shipmentDate") Date shipmentDate);
 
-    @Query("select o from Order o where o.stage = 'READY_FOR_SHIPMENT' and (o.isShipped = false or o.shipmentDate is null)")
+    @Query("select o from Order o where o.stage = 'READY_FOR_SHIPMENT' and (o.isShipped = false or o.shipmentDate is null) order by o.plannedDateOfShipment")
     List<Order> findAllNotShippedOrders();
 
     List<Order> findByCreateDateBetween(Date startDate, Date endDate);
