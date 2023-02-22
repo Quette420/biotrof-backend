@@ -16,7 +16,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying
     @Query("update Order o " +
-            "set o.price = :#{#order.price}, " +
+            "set o.productName = :#{#order.productName}, " +
+            "o.price = :#{#order.price}, " +
+            "o.weight = :#{#order.weight}, " +
+            "o.wishes = :#{#order.wishes}, " +
+            "o.plannedDateOfShipment = :#{#order.plannedDateOfShipment}, " +
+            "o.stage = :#{#order.stage}, " +
+            "o.weight = :#{#order.weight}, " +
+            "o.wishes = :#{#order.wishes}, " +
             "o.category = :#{#order.category} " +
             "where o.id = :id")
     void updateOrder(@Param("id") Long id, @Param("order") Order order);

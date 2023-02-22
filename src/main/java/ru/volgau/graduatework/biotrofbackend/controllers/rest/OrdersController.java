@@ -3,6 +3,7 @@ package ru.volgau.graduatework.biotrofbackend.controllers.rest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
 import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
@@ -57,11 +58,15 @@ public class OrdersController {
         orderDaoService.save(order);
     }
 
+    @Transactional
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
     public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request){
         log.info("updateOrder({}, {})",id, request);
-        orderDaoService.updateOrder(id, orderMapper.updateOrderRequestToOrder(request));
+        Order order = orderDaoService.getById(id);
+        log.info("Order is: " + order.toString());
+        orderMapper.updateOrderRequestToOrder(request, order);
+        log.info("Order is: " + order.toString());
     }
 
     @DeleteMapping("/{id}")

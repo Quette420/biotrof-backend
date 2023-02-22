@@ -40,10 +40,6 @@ public class Order {
 
     @Column(name = "weight")
     private Double weight;
-/*
-    @Column(name = "stage")
-    private String stage;
- */
     @Column(name = "wishes")
     private String wishes;
 
