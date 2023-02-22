@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/register").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/api/v1/orders").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .anyRequest()
