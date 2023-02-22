@@ -64,9 +64,7 @@ public class OrdersController {
     public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request){
         log.info("updateOrder({}, {})",id, request);
         Order order = orderDaoService.getById(id);
-        log.info("Order is: " + order.toString());
         orderMapper.updateOrderRequestToOrder(request, order);
-        log.info("Order is: " + order.toString());
     }
 
     @DeleteMapping("/{id}")
