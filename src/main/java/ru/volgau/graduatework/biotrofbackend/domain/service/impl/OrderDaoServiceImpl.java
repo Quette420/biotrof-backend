@@ -43,7 +43,7 @@ public class OrderDaoServiceImpl implements OrderDaoService {
 
     @Override
     public List<Order> findAllByUuid(String uuid) {
-        return repository.findAllByEmployerUuid(uuid);
+        return repository.findAllByEmployerUuidOrderByCreateDate(uuid);
     }
 
     @Override

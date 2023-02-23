@@ -28,7 +28,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.id = :id")
     void updateOrder(@Param("id") Long id, @Param("order") Order order);
 
-    List<Order> findAllByEmployerUuid(@Param("uuid") String uuid);
+    List<Order> findAllByEmployerUuidOrderByCreateDate(@Param("uuid") String uuid);
 
     @Modifying
     @Query("update Order o " +
