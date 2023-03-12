@@ -28,6 +28,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.id = :id")
     void updateOrder(@Param("id") Long id, @Param("order") Order order);
 
+    List<Order> findAllByOrderByCreateDate();
+
     List<Order> findAllByEmployerUuidOrderByCreateDate(@Param("uuid") String uuid);
 
     @Modifying

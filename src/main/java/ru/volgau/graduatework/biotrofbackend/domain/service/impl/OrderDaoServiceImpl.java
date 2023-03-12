@@ -23,7 +23,7 @@ public class OrderDaoServiceImpl implements OrderDaoService {
 
     @Override
     public List<Order> getAll() {
-        return repository.findAll();
+        return repository.findAllByOrderByCreateDate();
     }
 
     @Override
