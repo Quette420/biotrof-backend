@@ -58,6 +58,15 @@ public class Order {
     @Column(name = "is_shipped")
     private Boolean isShipped;
 
+    @Column(name = "client_fio")
+    private String clientFio;
+
+    @Column(name = "client_phoneNumber")
+    private String clientPhoneNumber;
+
+    @Column(name = "shipment_address")
+    private String shipmentAddress;
+
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private Date createDate;

@@ -1,6 +1,5 @@
 package ru.volgau.graduatework.biotrofbackend.model.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -26,8 +25,15 @@ public class CreateOrderRequest {
     @NotNull
     private Double weight;
 
+    @NotBlank
+    private String clientFio;
+
+    @NotBlank
+    private String phoneNumber;
+
+    @NotBlank
+    private String address;
+
     @NotNull
     private Date plannedDateOfShipment;
-
-    private String wishes;
 }
