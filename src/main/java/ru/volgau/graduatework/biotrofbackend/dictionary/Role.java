@@ -10,6 +10,7 @@ public enum Role {
     USER(Set.of(Permission.EMPLOYER_PERMISSIONS)),
 
     WAREHOUSE_MANAGER(Set.of(Permission.EMPLOYER_PERMISSIONS, Permission.WAREHOUSE_MANAGER)),
+
     ADMIN(Set.of(Permission.EMPLOYER_PERMISSIONS, Permission.WAREHOUSE_MANAGER, Permission.ADMIN_PERMISSIONS));
 
     private final Set<Permission> permissions;
