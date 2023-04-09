@@ -60,7 +60,7 @@ public class OrderDaoServiceImpl implements OrderDaoService {
     public List<Order> findByCreateDateBetweenAndProductName(Date startDate, Date endDate, String productName) {
         List<Order> orders = repository.findByCreateDateBetween(startDate, endDate);
         return orders.stream()
-                .filter(order -> productName.equals(order.getProductName()))
+                .filter(order -> productName.equals(order.getProduct().getProductName()))
                 .collect(Collectors.toList());
     }
 }

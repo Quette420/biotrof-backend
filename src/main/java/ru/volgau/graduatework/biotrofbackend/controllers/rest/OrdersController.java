@@ -5,16 +5,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.volgau.graduatework.biotrofbackend.domain.entity.Client;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
+import ru.volgau.graduatework.biotrofbackend.domain.entity.Product;
+import ru.volgau.graduatework.biotrofbackend.domain.service.ClientDaoService;
 import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
+import ru.volgau.graduatework.biotrofbackend.mappers.ClientMapper;
 import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
 import ru.volgau.graduatework.biotrofbackend.model.request.ChangeShipmentDataRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.UpdateOrderRequest;
+import ru.volgau.graduatework.biotrofbackend.service.ClientService;
+import ru.volgau.graduatework.biotrofbackend.service.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -22,9 +29,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrdersController {
 
-    private final EmployerDaoService employerDaoService;
     private final OrderDaoService orderDaoService;
     private final OrderMapper orderMapper;
+    private final ClientService clientService;
+    private final ProductService productService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
@@ -54,6 +62,8 @@ public class OrdersController {
     public void createOrder(@Valid @RequestBody CreateOrderRequest request){
         log.info("createOrder({})", request);
         Order order = orderMapper.createOrderRequestToOrder(request);
+        order.setProduct(productService.findProductOrCreateNew(request));
+        order.setClient(clientService.findOrCreateNew(request));
         order.setEmployerUuid(request.getEmployerUuid());
         orderDaoService.save(order);
     }

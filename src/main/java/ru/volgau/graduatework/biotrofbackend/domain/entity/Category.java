@@ -6,24 +6,20 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
 @ToString
 @EqualsAndHashCode(of = "id")
-@Table(name = "products")
-public class Product {
+@Table(name = "categories")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
     @SequenceGenerator(name = "product_id_seq", sequenceName = "product_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "product_name")
-    private String productName;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Category category;
+    @Column(name = "category_name")
+    private String categoryName;
 }

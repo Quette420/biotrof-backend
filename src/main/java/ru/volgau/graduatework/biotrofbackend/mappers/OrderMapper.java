@@ -10,12 +10,10 @@ public abstract class OrderMapper {
 
     @Mapping(target = "isShipped", constant = "false")
     @Mapping(target = "stage", constant = "WAITING_FOR_PAYMENT")
-    @Mapping(target = "clientPhoneNumber", source = "phoneNumber")
-    @Mapping(target = "shipmentAddress", source = "address")
     public abstract Order createOrderRequestToOrder(CreateOrderRequest request);
 
-    @Mapping(target = "productName", expression = "java(notEmptyValidate(request.getProductName(), order.getProductName()))")
-    @Mapping(target = "category", expression = "java(notEmptyValidate(request.getCategory(), order.getCategory()))")
+    @Mapping(target = "order.getProduct().getProductName()", expression = "java(notEmptyValidate(request.getProductName(), order.getProductName()))")
+    @Mapping(target = "order.getProduct().getCategory()", expression = "java(notEmptyValidate(request.getCategory(), order.getCategory()))")
     @Mapping(target = "wishes", expression = "java(notEmptyValidate(request.getWishes(), order.getWishes()))")
     public abstract void updateOrderRequestToOrder(UpdateOrderRequest request, @MappingTarget Order order);
 

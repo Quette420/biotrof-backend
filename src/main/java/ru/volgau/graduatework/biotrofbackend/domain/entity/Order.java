@@ -29,17 +29,16 @@ public class Order {
     @SequenceGenerator(name = "order_id_seq", sequenceName = "order_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "product_name")
-    private String productName;
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "category")
-    private String category;
-
     @Column(name = "weight")
     private Double weight;
+
     @Column(name = "wishes")
     private String wishes;
 
@@ -58,14 +57,12 @@ public class Order {
     @Column(name = "is_shipped")
     private Boolean isShipped;
 
-    @Column(name = "client_fio")
-    private String clientFio;
+    @Column(name = "employer_uuid")
+    private String employerUuid;
 
-    @Column(name = "client_phoneNumber")
-    private String clientPhoneNumber;
-
-    @Column(name = "shipment_address")
-    private String shipmentAddress;
+    @ManyToOne
+    @JoinColumn(name = "client_uuid", referencedColumnName = "uuid")
+    private Client client;
 
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
@@ -73,9 +70,6 @@ public class Order {
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private Date modifiedDate;
-
-    @Column(name = "employer_uuid")
-    private String employerUuid;
 /*
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employer_uuid")

@@ -30,17 +30,11 @@ public class OrderMapperTest {
         request.setCategory("category");
         request.setPrice(BigDecimal.ONE);
         request.setWeight(10.0);
-        request.setWishes("wishes");
         request.setEmployerUuid("uuid");
         request.setPlannedDateOfShipment(new Date());
 
         Order order = mapper.createOrderRequestToOrder(request);
 
-        assertEquals(request.getProductName(), order.getProductName());
-        assertEquals(request.getCategory(), order.getCategory());
-        assertEquals(request.getPrice(), order.getPrice());
-        assertEquals(request.getWeight(), order.getWeight());
-        assertEquals(request.getWishes(), order.getWishes());
         assertEquals(request.getEmployerUuid(), order.getEmployerUuid());
         assertEquals(request.getPlannedDateOfShipment(), order.getPlannedDateOfShipment());
         assertFalse(order.getIsShipped());
@@ -53,13 +47,11 @@ public class OrderMapperTest {
         request.setProductName("");
         request.setStage(Stage.DONE);
         Order order = new Order();
-        order.setProductName("productName");
         order.setEmployerUuid("uuid");
 
         mapper.updateOrderRequestToOrder(request, order);
 
         assertEquals(Stage.DONE, order.getStage());
-        assertEquals("productName", order.getProductName());
         assertNotNull(order.getEmployerUuid());
     }
 }

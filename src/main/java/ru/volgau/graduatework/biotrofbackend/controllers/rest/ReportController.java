@@ -34,7 +34,7 @@ public class ReportController {
         return Collections.singletonList("Reports");
     }
 
-    @PostMapping("/create/v1")
+  /*  @PostMapping("/create/v1")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Resource> createReport(@RequestBody CreateReportRequest request) {
         String[] csvHeader = {
@@ -100,4 +100,6 @@ public class ReportController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }
+
+   */
 }
