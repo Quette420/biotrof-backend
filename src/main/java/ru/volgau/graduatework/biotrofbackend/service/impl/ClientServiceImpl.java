@@ -19,8 +19,8 @@ public class ClientServiceImpl implements ClientService {
     public Client findOrCreateNew(CreateOrderRequest request) {
         Client client = clientDaoService.findByFioAndPhone(request.getClientFio(), request.getPhoneNumber());
         if(client == null) {
-            Client clientFromRequest = clientMapper.createClientByCreateOrderRequest(request);
-            clientDaoService.save(clientFromRequest);
+            client = clientMapper.createClientByCreateOrderRequest(request);
+            clientDaoService.save(client);
         }
         return client;
     }
