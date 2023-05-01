@@ -57,6 +57,11 @@ public class OrderDaoServiceImpl implements OrderDaoService {
     }
 
     @Override
+    public List<Order> getAllShippedOrders() {
+        return repository.findAllShippedOrders();
+    }
+
+    @Override
     public List<Order> findByCreateDateBetweenAndProductName(Date startDate, Date endDate, String productName) {
         List<Order> orders = repository.findByCreateDateBetween(startDate, endDate);
         return orders.stream()

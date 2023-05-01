@@ -22,5 +22,7 @@ public interface OrderDaoService {
 
     List<Order> getAllNotShippedOrders();
 
+    public List<Order> getAllShippedOrders();
+
     List<Order> findByCreateDateBetweenAndProductName(Date startDate, Date endDate, String productName);
 }

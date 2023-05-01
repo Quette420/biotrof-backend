@@ -84,11 +84,18 @@ public class OrdersController {
         orderDaoService.deleteById(id);
     }
 
-    @GetMapping("/shipment")
+    @GetMapping("/shipment/not-shipped")
     @PreAuthorize("hasAnyAuthority('WAREHOUSE_MANAGER')")
     public List<Order> getAllNotShippedOrders() {
         log.info("getAllNotShippedOrders()");
         return orderDaoService.getAllNotShippedOrders();
+    }
+
+    @GetMapping("/shipment/shipped")
+    @PreAuthorize("hasAnyAuthority('WAREHOUSE_MANAGER')")
+    public List<Order> getAllShippedOrders() {
+        log.info("getAllShippedOrders()");
+        return orderDaoService.getAllShippedOrders();
     }
 
     @PutMapping("/shipment/{id}")
