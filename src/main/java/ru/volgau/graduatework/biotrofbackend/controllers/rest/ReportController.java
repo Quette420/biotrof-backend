@@ -1,6 +1,7 @@
 package ru.volgau.graduatework.biotrofbackend.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.core.io.InputStreamResource;
@@ -12,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
+import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
+import ru.volgau.graduatework.biotrofbackend.model.dto.OrderReportDto;
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateReportRequest;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +23,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/reports")
 @RequiredArgsConstructor

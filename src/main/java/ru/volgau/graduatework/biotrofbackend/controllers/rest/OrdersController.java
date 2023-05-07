@@ -13,15 +13,19 @@ import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.ClientMapper;
 import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
+import ru.volgau.graduatework.biotrofbackend.model.dto.OrderReportDto;
 import ru.volgau.graduatework.biotrofbackend.model.request.ChangeShipmentDataRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateOrderRequest;
+import ru.volgau.graduatework.biotrofbackend.model.request.CreateReportRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.UpdateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.service.ClientService;
 import ru.volgau.graduatework.biotrofbackend.service.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -103,5 +107,17 @@ public class OrdersController {
     public void changeShipmentData(@PathVariable("id") Long id, @Valid @RequestBody ChangeShipmentDataRequest request){
         log.info("changeShipmentData({}, {})", id, request);
         orderDaoService.updateShipmentData(id, request.getShipmentDate());
+    }
+
+    @GetMapping("/by-date")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public List<OrderReportDto> getOrdersByDate(){
+        List<Order> orders = orderDaoService.getAll();
+        List<OrderReportDto> reportDtos =
+                orders.stream()
+                .map(orderMapper::toOrderReportDto)
+                .collect(Collectors.toList());
+        log.info(reportDtos.toString());
+        return reportDtos;
     }
 }
