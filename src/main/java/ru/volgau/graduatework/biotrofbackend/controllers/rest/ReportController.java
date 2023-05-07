@@ -30,11 +30,12 @@ public class ReportController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public List<String> getAllReports(){
-        return Collections.singletonList("Reports");
+    public List<Order> getReports(@RequestBody CreateReportRequest request){
+        return orderDaoService.findByCreateDateBetweenAndProductName(request.getDateFrom(), request.getDateTo(), request.getProductName());
     }
+/*
 
-  /*  @PostMapping("/create/v1")
+    @PostMapping("/create/v1")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Resource> createReport(@RequestBody CreateReportRequest request) {
         String[] csvHeader = {
@@ -57,7 +58,7 @@ public class ReportController {
             throw new RuntimeException(e.getMessage());
         }
         InputStreamResource fileInputStream = new InputStreamResource(byteArrayOutputStream);
-        String csvFileName = "people.csv";
+        String csvFileName = "orders.csv";
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + csvFileName);
         headers.set(HttpHeaders.CONTENT_TYPE, "text/csv");
