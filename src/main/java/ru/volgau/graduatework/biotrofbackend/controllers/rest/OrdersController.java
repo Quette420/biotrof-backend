@@ -15,12 +15,14 @@ import ru.volgau.graduatework.biotrofbackend.model.request.CreateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.UpdateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.service.ClientService;
 import ru.volgau.graduatework.biotrofbackend.service.ProductService;
+import ru.volgau.graduatework.biotrofbackend.utils.DateHelper;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.volgau.graduatework.biotrofbackend.dictionary.Stage.DONE;
+import static ru.volgau.graduatework.biotrofbackend.utils.DateHelper.getFirstDayOfYear;
 
 @Slf4j
 @RestController
@@ -52,6 +54,15 @@ public class OrdersController {
     public List<Order> getAllEmployerOrders(@PathVariable String uuid) {
         log.info("getAllEmployerOrders({})", uuid);
         List<Order> orders = orderDaoService.findAllByUuid(uuid);
+        log.info(orders.toString());
+        return orders;
+    }
+
+    @GetMapping("/by-year/{year}")
+    @PreAuthorize("hasAnyAuthority('EMPLOYER')")
+    public List<Order> getAllEmployerOrders(@PathVariable Integer year) {
+        log.info("getAllEmployerOrders({})", year);
+        List<Order> orders = orderDaoService.findByCreateDateBetween(getFirstDayOfYear(year), DateHelper.getLastDayOfYear(year));
         log.info(orders.toString());
         return orders;
     }
