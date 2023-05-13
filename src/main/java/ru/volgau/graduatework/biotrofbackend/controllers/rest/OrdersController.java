@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.volgau.graduatework.biotrofbackend.dictionary.Stage;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
@@ -18,6 +19,8 @@ import ru.volgau.graduatework.biotrofbackend.service.ProductService;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.volgau.graduatework.biotrofbackend.dictionary.Stage.DONE;
 
 @Slf4j
 @RestController
@@ -70,7 +73,12 @@ public class OrdersController {
     public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request){
         log.info("updateOrder({}, {})",id, request);
         Order order = orderDaoService.getById(id);
+        boolean needCleanShipmentData = DONE.equals(order.getStage()) && !DONE.equals(request.getStage());
         orderMapper.updateOrderRequestToOrder(request, order);
+        if(needCleanShipmentData) {
+            order.setShipmentDate(null);
+            order.setIsShipped(false);
+        }
     }
 
     @DeleteMapping("/{id}")
