@@ -24,6 +24,12 @@ public class Product {
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "quantity")
+    private Double quantity;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Category category;
 }

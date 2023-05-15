@@ -9,6 +9,10 @@ import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 
 public class DateHelper {
 
+    private DateHelper() {
+
+    }
+
     public static Date getFirstDayOfYear(int year) {
         LocalDate firstDayOfYear = LocalDate.of(year, 1, 1).with(firstDayOfYear());
         return Date.from(firstDayOfYear.atStartOfDay(ZoneId.systemDefault()).toInstant());

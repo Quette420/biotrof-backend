@@ -18,15 +18,15 @@ import ru.volgau.graduatework.biotrofbackend.exceptions.UserAlreadyExistsExcepti
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UserAlreadyExistsException.class})
-    public final ResponseEntity<Object> handleUserAlreadyExistsException(final RuntimeException e, ServletWebRequest request){
+    public final ResponseEntity<Object> handleUserAlreadyExistsException(final RuntimeException e, ServletWebRequest request) {
         log.error("UserAlreadyExists ", e);
-        final ApiError apiError = message(e , request);
+        final ApiError apiError = message(e, request);
         return handleExceptionInternal(e, apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    private ApiError message(final Exception ex, ServletWebRequest request){
+    private ApiError message(final Exception ex, ServletWebRequest request) {
         final String devMessage = ex.getClass().getSimpleName();
-        final String message = ex.getMessage() == null ?  devMessage : ex.getMessage();
+        final String message = ex.getMessage() == null ? devMessage : ex.getMessage();
         return new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), request.getRequest().getRequestURI(), message, devMessage);
     }
 }

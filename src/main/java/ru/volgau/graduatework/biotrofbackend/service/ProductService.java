@@ -6,4 +6,6 @@ import ru.volgau.graduatework.biotrofbackend.model.request.CreateOrderRequest;
 public interface ProductService {
 
     Product findProductOrCreateNew(CreateOrderRequest request);
+
+    void updateQuantity(Product product, Double quantity);
 }

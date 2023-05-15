@@ -25,6 +25,7 @@ public class SecurityUser implements UserDetails {
         this.authorities = authorities;
         this.isActive = isActive;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -60,7 +61,7 @@ public class SecurityUser implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromEmployer(Employer employer){
+    public static UserDetails fromEmployer(Employer employer) {
         return new User(
                 employer.getUsername(),
                 employer.getPassword(),

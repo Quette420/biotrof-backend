@@ -2,6 +2,7 @@ package ru.volgau.graduatework.biotrofbackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Category;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Product;
 import ru.volgau.graduatework.biotrofbackend.domain.service.CategoryDaoService;
@@ -21,18 +22,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findProductOrCreateNew(CreateOrderRequest request) {
-        Product product = productDaoService.findByProductName(request.getProductName());
-        if(product == null) {
-            product = mapper.createProductFromCreateOrderRequest(request);
-        }
-        Category category = categoryDaoService.findByName(request.getCategory());
-        if(category == null) {
-            category = new Category();
-            category.setCategoryName(request.getCategory());
-            categoryDaoService.save(category);
-        }
-        product.setCategory(category);
-        productDaoService.save(product);
-        return product;
+        return productDaoService.findByProductName(request.getProductName());
+    }
+
+    @Override
+    @Transactional
+    public void updateQuantity(Product product, Double quantity) {
+        product.setQuantity(product.getQuantity() - quantity);
     }
 }

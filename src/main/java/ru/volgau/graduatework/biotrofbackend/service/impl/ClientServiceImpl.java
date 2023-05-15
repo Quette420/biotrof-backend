@@ -18,7 +18,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client findOrCreateNew(CreateOrderRequest request) {
         Client client = clientDaoService.findByFioAndPhone(request.getClientFio(), request.getPhoneNumber());
-        if(client == null) {
+        if (client == null) {
             client = clientMapper.createClientByCreateOrderRequest(request);
             clientDaoService.save(client);
         }

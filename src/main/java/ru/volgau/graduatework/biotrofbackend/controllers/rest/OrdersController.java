@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.volgau.graduatework.biotrofbackend.dictionary.Stage;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
+import ru.volgau.graduatework.biotrofbackend.domain.entity.Product;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
 import ru.volgau.graduatework.biotrofbackend.model.dto.OrderReportDto;
@@ -37,14 +37,14 @@ public class OrdersController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
-    public List<Order> getAllOrders(){
+    public List<Order> getAllOrders() {
         log.info("getAllOrders()");
         return orderDaoService.getAll();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
-    public Order getOrderById(@PathVariable("id") Long id){
+    public Order getOrderById(@PathVariable("id") Long id) {
         log.info("getOrderById({})", id);
         return orderDaoService.getById(id);
     }
@@ -69,10 +69,12 @@ public class OrdersController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
-    public void createOrder(@Valid @RequestBody CreateOrderRequest request){
+    public void createOrder(@Valid @RequestBody CreateOrderRequest request) {
         log.info("createOrder({})", request);
         Order order = orderMapper.createOrderRequestToOrder(request);
-        order.setProduct(productService.findProductOrCreateNew(request));
+        Product product = productService.findProductOrCreateNew(request);
+        productService.updateQuantity(product, request.getWeight());
+        order.setProduct(product);
         order.setClient(clientService.findOrCreateNew(request));
         order.setEmployerUuid(request.getEmployerUuid());
         orderDaoService.save(order);
@@ -81,12 +83,12 @@ public class OrdersController {
     @Transactional
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
-    public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request){
-        log.info("updateOrder({}, {})",id, request);
+    public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request) {
+        log.info("updateOrder({}, {})", id, request);
         Order order = orderDaoService.getById(id);
         boolean needCleanShipmentData = DONE.equals(order.getStage()) && !DONE.equals(request.getStage());
         orderMapper.updateOrderRequestToOrder(request, order);
-        if(needCleanShipmentData) {
+        if (needCleanShipmentData) {
             order.setShipmentDate(null);
             order.setIsShipped(false);
         }
@@ -94,8 +96,8 @@ public class OrdersController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
-    public void deleteOrder(@PathVariable("id") Long id){
-        log.info("deleteOrder({})",id);
+    public void deleteOrder(@PathVariable("id") Long id) {
+        log.info("deleteOrder({})", id);
         orderDaoService.deleteById(id);
     }
 
@@ -115,19 +117,16 @@ public class OrdersController {
 
     @PutMapping("/shipment/{id}")
     @PreAuthorize("hasAnyAuthority('WAREHOUSE_MANAGER')")
-    public void changeShipmentData(@PathVariable("id") Long id, @Valid @RequestBody ChangeShipmentDataRequest request){
+    public void changeShipmentData(@PathVariable("id") Long id, @Valid @RequestBody ChangeShipmentDataRequest request) {
         log.info("changeShipmentData({}, {})", id, request);
         orderDaoService.updateShipmentData(id, request.getShipmentDate());
     }
 
     @GetMapping("/by-date")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public List<OrderReportDto> getOrdersByDate(){
+    public List<OrderReportDto> getOrdersByDate() {
         List<Order> orders = orderDaoService.getAll();
-        List<OrderReportDto> reportDtos =
-                orders.stream()
-                .map(orderMapper::toOrderReportDto)
-                .collect(Collectors.toList());
+        List<OrderReportDto> reportDtos = orders.stream().map(orderMapper::toOrderReportDto).collect(Collectors.toList());
         log.info(reportDtos.toString());
         return reportDtos;
     }
