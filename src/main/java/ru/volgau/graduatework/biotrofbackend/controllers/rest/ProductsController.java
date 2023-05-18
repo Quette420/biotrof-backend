@@ -14,6 +14,7 @@ import ru.volgau.graduatework.biotrofbackend.model.request.CreateProductRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.UpdateProductQuantityRequest;
 import ru.volgau.graduatework.biotrofbackend.utils.StringHelper;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class ProductsController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('WAREHOUSE_MANAGER')")
-    public void createProduct(@RequestBody CreateProductRequest request) {
+    public void createProduct(@Valid @RequestBody CreateProductRequest request) {
         log.info("createProduct({})", request);
         productDaoService.save(productMapper.createProductFromCreateProductRequest(request));
     }
@@ -43,7 +44,7 @@ public class ProductsController {
     @Transactional
     @PutMapping("/quantity")
     @PreAuthorize("hasAnyAuthority('WAREHOUSE_MANAGER')")
-    public void updateProductQuantity(@RequestBody UpdateProductQuantityRequest request) {
+    public void updateProductQuantity(@Valid @RequestBody UpdateProductQuantityRequest request) {
         log.info("updateProductQuantity({})", request);
         Product product = productDaoService.findByProductName(StringHelper.removeQuantityData(request.getProductName()));
         product.setQuantity(product.getQuantity() == null ? request.getQuantity() : product.getQuantity() + request.getQuantity());
