@@ -47,9 +47,11 @@ public class EmployerDaoServiceImpl implements EmployerDaoService {
 
     @Override
     public Optional<List<String>> findEmployerEmailsByRole(Set<Role> roles) {
-        List<Employer> employersWithEmailByRole = repository.findAllNotShippedOrders(roles);
-        if(!employersWithEmailByRole.isEmpty()) {
-            return Optional.of(employersWithEmailByRole.stream().map(Employer::getEmail).collect(Collectors.toList()));
+        if(!roles.isEmpty()) {
+            List<Employer> employersWithEmailByRole = repository.findAllNotShippedOrders(roles);
+            if (!employersWithEmailByRole.isEmpty()) {
+                return Optional.of(employersWithEmailByRole.stream().map(Employer::getEmail).collect(Collectors.toList()));
+            }
         }
         return Optional.empty();
     }
