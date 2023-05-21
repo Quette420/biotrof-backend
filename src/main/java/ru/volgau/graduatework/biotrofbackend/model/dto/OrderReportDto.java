@@ -1,8 +1,7 @@
 package ru.volgau.graduatework.biotrofbackend.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
+import ru.volgau.graduatework.biotrofbackend.dictionary.Stage;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -11,7 +10,6 @@ public class OrderReportDto {
 
     private Long id;
 
-    @JsonProperty("product_name")
     private String productName;
 
     private String category;
@@ -20,6 +18,23 @@ public class OrderReportDto {
 
     private Double weight;
 
-    @JsonProperty("create_date")
+    private Stage stage;
+
+    private Boolean isShipped;
+
+    private String clientFirstName;
+
+    private String clientLastName;
+
+    private String clientMiddleName;
+
+    private String clientNumber;
+
+    private String address;
+
     private Date createDate;
+
+    private Date shipmentDate;
+
+    private String employerUuid;
 }

@@ -20,6 +20,11 @@ public abstract class OrderMapper {
 
     @Mapping(target = "productName", source = "order.product.productName")
     @Mapping(target = "category", source = "order.product.category.categoryName")
+    @Mapping(target = "clientFirstName", source = "order.client.firstName")
+    @Mapping(target = "clientLastName", source = "order.client.lastName")
+    @Mapping(target = "clientMiddleName", source = "order.client.middleName")
+    @Mapping(target = "clientNumber", source = "order.client.phoneNumber")
+    @Mapping(target = "address", source = "order.client.address")
     public abstract OrderReportDto toOrderReportDto(Order order);
 
     protected String notEmptyValidate(String requestField, String orderField) {
