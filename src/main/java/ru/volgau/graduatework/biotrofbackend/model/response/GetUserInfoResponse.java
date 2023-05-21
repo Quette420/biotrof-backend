@@ -14,4 +14,6 @@ public class GetUserInfoResponse {
     private Role role;
 
     private Status status;
+
+    private String email;
 }
