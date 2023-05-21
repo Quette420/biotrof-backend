@@ -73,8 +73,9 @@ public class AuthenticationController {
     @PostMapping("/email/create")
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
     public void addEmail(@Valid @RequestBody CreateEmailRequest request) {
+        log.info(request.toString());
         Employer employer = employerDaoService.getById(request.getUuid());
-        employer.setPassword(request.getEmail());
+        employer.setEmail(request.getEmail());
         employerDaoService.save(employer);
     }
 
