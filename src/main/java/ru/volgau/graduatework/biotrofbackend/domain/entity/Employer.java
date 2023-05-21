@@ -36,10 +36,4 @@ public class Employer {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
-
-  /*  @OneToMany
-    @JoinColumn(name = "order_id")
-    private List<Order> contacts;
-
-   */
 }

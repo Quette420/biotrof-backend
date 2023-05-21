@@ -70,10 +70,4 @@ public class Order {
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private Date modifiedDate;
-/*
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employer_uuid")
-    private Employer employer;
-
- */
 }
