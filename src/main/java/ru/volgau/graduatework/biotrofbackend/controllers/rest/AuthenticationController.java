@@ -17,6 +17,7 @@ import ru.volgau.graduatework.biotrofbackend.domain.entity.Employer;
 import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.EmployerMapper;
 import ru.volgau.graduatework.biotrofbackend.model.request.ChangePasswordRequest;
+import ru.volgau.graduatework.biotrofbackend.model.request.CreateEmailRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateEmployerRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.LoginRequest;
 import ru.volgau.graduatework.biotrofbackend.model.response.EmployerRegistrationResponse;
@@ -67,6 +68,14 @@ public class AuthenticationController {
         } catch (AuthenticationException e){
             return new ResponseEntity<>("Invalid username/password combination", HttpStatus.FORBIDDEN);
         }
+    }
+
+    @PostMapping("/email/create")
+    @PreAuthorize("hasAnyAuthority('EMPLOYER')")
+    public void addEmail(@Valid @RequestBody CreateEmailRequest request) {
+        Employer employer = employerDaoService.getById(request.getUuid());
+        employer.setPassword(request.getEmail());
+        employerDaoService.save(employer);
     }
 
     @PostMapping("/change-password")
