@@ -2,11 +2,14 @@ package ru.volgau.graduatework.biotrofbackend.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.volgau.graduatework.biotrofbackend.dictionary.Role;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Order;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Product;
+import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
 import ru.volgau.graduatework.biotrofbackend.domain.service.OrderDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.OrderMapper;
 import ru.volgau.graduatework.biotrofbackend.model.dto.OrderReportDto;
@@ -14,14 +17,18 @@ import ru.volgau.graduatework.biotrofbackend.model.request.ChangeShipmentDataReq
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.UpdateOrderRequest;
 import ru.volgau.graduatework.biotrofbackend.service.ClientService;
+import ru.volgau.graduatework.biotrofbackend.service.MailSender;
 import ru.volgau.graduatework.biotrofbackend.service.ProductService;
 import ru.volgau.graduatework.biotrofbackend.utils.DateHelper;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.volgau.graduatework.biotrofbackend.dictionary.Stage.DONE;
+import static ru.volgau.graduatework.biotrofbackend.dictionary.Stage.READY_FOR_SHIPMENT;
 import static ru.volgau.graduatework.biotrofbackend.utils.DateHelper.getFirstDayOfYear;
 
 @Slf4j
@@ -34,6 +41,11 @@ public class OrdersController {
     private final OrderMapper orderMapper;
     private final ClientService clientService;
     private final ProductService productService;
+    private final EmployerDaoService employerDaoService;
+    private final MailSender mailSender;
+
+    @Value("${mail.roles-to-mail-sent}")
+    private Set<Role> rolesToSentEmails;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
@@ -86,6 +98,10 @@ public class OrdersController {
     public void updateOrder(@PathVariable("id") Long id, @Valid @RequestBody UpdateOrderRequest request) {
         log.info("updateOrder({}, {})", id, request);
         Order order = orderDaoService.getById(id);
+        if(READY_FOR_SHIPMENT.equals(request.getStage())) {
+            Optional<List<String>> emailsTo = employerDaoService.findEmployerEmailsByRole(rolesToSentEmails);
+            emailsTo.ifPresent(strings -> mailSender.send("Уведомление о готовности заказа к отгрузке.", String.format("Заказ № %s готов к отгрузке.", id), "gsaranov@gmail.com", "gosha.saranov@mail.ru"));
+        }
         boolean needCleanShipmentData = DONE.equals(order.getStage()) && !DONE.equals(request.getStage());
         orderMapper.updateOrderRequestToOrder(request, order);
         if (needCleanShipmentData) {

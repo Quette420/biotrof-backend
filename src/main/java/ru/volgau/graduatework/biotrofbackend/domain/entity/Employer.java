@@ -29,6 +29,9 @@ public class Employer {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "email", unique=true)
+    private String email;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
