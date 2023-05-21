@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.volgau.graduatework.biotrofbackend.domain.entity.Employer;
 import ru.volgau.graduatework.biotrofbackend.domain.service.EmployerDaoService;
 import ru.volgau.graduatework.biotrofbackend.mappers.EmployerMapper;
+import ru.volgau.graduatework.biotrofbackend.model.request.ChangePasswordRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.CreateEmployerRequest;
 import ru.volgau.graduatework.biotrofbackend.model.request.LoginRequest;
 import ru.volgau.graduatework.biotrofbackend.model.response.EmployerRegistrationResponse;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -61,9 +64,23 @@ public class AuthenticationController {
             response.put("role", employer.getRole());
             response.put("uuid", employer.getUuid());
             return ResponseEntity.ok(response);
-        }catch (AuthenticationException e){
+        } catch (AuthenticationException e){
             return new ResponseEntity<>("Invalid username/password combination", HttpStatus.FORBIDDEN);
         }
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasAnyAuthority('EMPLOYER')")
+    public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        Employer employer = employerDaoService.getById(request.getUuid());
+        if(!passwordEncoder.matches(request.getOldPassword(), employer.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+        if(!Objects.equals(request.getNewPassword(), request.getDuplicateNewPassword())) {
+            throw new BadCredentialsException("New passwords not matches");
+        }
+        employer.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        employerDaoService.save(employer);
     }
 
     @PostMapping("/logout")
