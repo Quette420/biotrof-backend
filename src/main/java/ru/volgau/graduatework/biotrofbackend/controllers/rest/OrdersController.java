@@ -100,7 +100,10 @@ public class OrdersController {
         Order order = orderDaoService.getById(id);
         if(READY_FOR_SHIPMENT.equals(request.getStage())) {
             Optional<List<String>> emailsTo = employerDaoService.findEmployerEmailsByRole(rolesToSentEmails);
-            emailsTo.ifPresent(strings -> mailSender.send("Уведомление о готовности заказа к отгрузке.", String.format("Заказ № %s готов к отгрузке.", id), "gsaranov@gmail.com", "gosha.saranov@mail.ru"));
+            emailsTo.ifPresent(strings -> mailSender.send(
+                    "Уведомление о готовности заказа к отгрузке.",
+                    String.format("Заказ № %s , на сумму %s руб., весом %s кг, готов к отгрузке.", id, order.getPrice(), order.getWeight()),
+                    "gsaranov@gmail.com", "gosha.saranov@mail.ru"));
         }
         boolean needCleanShipmentData = DONE.equals(order.getStage()) && !DONE.equals(request.getStage());
         orderMapper.updateOrderRequestToOrder(request, order);
