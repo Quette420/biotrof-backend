@@ -22,6 +22,7 @@ import ru.volgau.graduatework.biotrofbackend.service.ProductService;
 import ru.volgau.graduatework.biotrofbackend.utils.DateHelper;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,7 +104,7 @@ public class OrdersController {
             emailsTo.ifPresent(strings -> mailSender.send(
                     "Уведомление о готовности заказа к отгрузке.",
                     String.format("Заказ № %s , на сумму %s руб., весом %s кг, готов к отгрузке.", id, order.getPrice(), order.getWeight()),
-                    "gsaranov@gmail.com", "gosha.saranov@mail.ru"));
+                    emailsTo.get().toArray(new String[0])));
         }
         boolean needCleanShipmentData = DONE.equals(order.getStage()) && !DONE.equals(request.getStage());
         orderMapper.updateOrderRequestToOrder(request, order);
