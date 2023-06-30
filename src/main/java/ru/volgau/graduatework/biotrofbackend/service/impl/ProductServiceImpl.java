@@ -27,7 +27,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void updateQuantity(Product product, Double quantity) {
+    public void reduceQuantity(Product product, Double quantity) {
         product.setQuantity(product.getQuantity() - quantity);
+    }
+
+    @Override
+    @Transactional
+    public void increaseQuantity(Product product, Double quantity) {
+        product.setQuantity(product.getQuantity() + quantity);
     }
 }

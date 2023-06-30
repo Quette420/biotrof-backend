@@ -86,7 +86,7 @@ public class OrdersController {
         log.info("createOrder({})", request);
         Order order = orderMapper.createOrderRequestToOrder(request);
         Product product = productService.findProductOrCreateNew(request);
-        productService.updateQuantity(product, request.getWeight());
+        productService.reduceQuantity(product, request.getWeight());
         order.setProduct(product);
         order.setClient(clientService.findOrCreateNew(request));
         order.setEmployerUuid(request.getEmployerUuid());
@@ -118,6 +118,8 @@ public class OrdersController {
     @PreAuthorize("hasAnyAuthority('EMPLOYER')")
     public void deleteOrder(@PathVariable("id") Long id) {
         log.info("deleteOrder({})", id);
+        Order orderToDelete = orderDaoService.getById(id);
+        productService.increaseQuantity(orderToDelete.getProduct(), orderToDelete.getWeight());
         orderDaoService.deleteById(id);
     }
 

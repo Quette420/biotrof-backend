@@ -7,5 +7,7 @@ public interface ProductService {
 
     Product findProductOrCreateNew(CreateOrderRequest request);
 
-    void updateQuantity(Product product, Double quantity);
+    void reduceQuantity(Product product, Double quantity);
+
+    void increaseQuantity(Product product, Double quantity);
 }
